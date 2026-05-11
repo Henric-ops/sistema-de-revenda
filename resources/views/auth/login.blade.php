@@ -4,112 +4,82 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login</title>
+    <title>Cosmetiq | Login</title>
 
-    {{-- Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    {{-- Bootstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    {{-- Fonts --}}
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lora:wght@400;500;600&display=swap"
         rel="stylesheet">
 
-    {{-- CSS --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
 </head>
 
-<body class="login-body">
+<body class="login-body-cosmetiq">
 
-    <div class="login-container">
+    <div class="login-wrapper">
 
-        {{-- LADO ESQUERDO --}}
-        <div class="login-banner">
+        <div class="login-box">
 
-            <div>
+            {{-- LOGO --}}
+            <div class="login-logo">
+                <div class="logo-icon">
+                    <i class="bi bi-flower2"></i>
+                </div>
 
-                <h1>
-                    Cosmetiq
-                </h1>
-
-                <p>
-                    Sistema inteligente para controle financeiro de clientes e vendas.
-                </p>
-
+                <h1>Cosmetiq</h1>
+                <span>Sistema de Gestão para Revendedoras</span>
             </div>
 
-        </div>
+            {{-- FORM --}}
+            <form action="/login" method="POST" class="login-form">
 
-        {{-- FORM --}}
-        <div class="login-form-side">
+                @csrf
 
-            <div class="login-card">
+                <div class="input-group-custom">
 
-                <h2>
-                    Bem-vinda
-                </h2>
+                    <label>E-mail</label>
 
-                <p>
-                    Faça login para continuar.
-                </p>
-
-                @if(session('erro'))
-
-                    <div class="alert alert-danger">
-
-                        {{ session('erro') }}
-
-                    </div>
-
-                @endif
-
-                <form action="/login" method="POST" class="custom-form">
-
-                    @csrf
-
-                    <div class="form-group">
-
-                        <label>
-                            E-mail
-                        </label>
-
+                    <div class="input-field">
+                        <i class="bi bi-envelope"></i>
                         <input type="email" name="email" placeholder="Digite seu e-mail">
-
                     </div>
 
-                    <div class="form-group">
+                </div>
 
-                        <label>
-                            Senha
-                        </label>
+                <div class="input-group-custom">
 
-                        <input type="password" name="password" placeholder="Digite sua senha">
+                    <label>Senha</label>
 
+                    <div class="input-field">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" name="password" placeholder="••••••••">
                     </div>
 
-                    <button type="submit" class="btn-primary-custom w-100">
+                </div>
 
-                        <i class="bi bi-box-arrow-in-right"></i>
+                <button class="btn-login-cosmetiq" type="submit">
 
-                        Entrar
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Entrar
 
-                    </button>
+                </button>
 
-                </form>
 
+            </form>
+
+            <div class="login-footer">
+                <i class="bi bi-shield-check"></i>
+                Acesso protegido e seguro
             </div>
 
         </div>
 
     </div>
-
-    <script src="{{ asset('js/app.js') }}"></script>
 
 </body>
 
