@@ -1,0 +1,19 @@
+setTimeout(() => {
+
+    const alerts = document.querySelectorAll('.alert');
+
+    alerts.forEach(alert => {
+
+        alert.style.transition = '.4s';
+
+        alert.style.opacity = '0';
+
+        setTimeout(() => {
+
+            alert.remove();
+
+        }, 400);
+
+    });
+
+}, 3000);
