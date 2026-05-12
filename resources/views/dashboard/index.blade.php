@@ -116,7 +116,7 @@
 
                         <th>Status</th>
 
-                        <th>Valor</th>
+                        <th>Valor Restante</th>
 
                     </tr>
 
@@ -134,17 +134,31 @@
 
                             <td>
 
-                                <span class="badge-status pendente">
+                                @if($compra->saldo_restante == 0)
 
-                                    {{ $compra->status }}
+                                    <span class="badge-status ativo">
+                                        Pago
+                                    </span>
 
-                                </span>
+                                @elseif($compra->saldo_restante < $compra->valor_total)
+
+                                    <span class="badge-status parcial">
+                                        Parcial
+                                    </span>
+
+                                @else
+
+                                    <span class="badge-status pendente">
+                                        Pendente
+                                    </span>
+
+                                @endif
 
                             </td>
 
                             <td>
 
-                                R$ {{ number_format($compra->valor_total, 2, ',', '.') }}
+                                R$ {{ number_format($compra->saldo_restante, 2, ',', '.') }}
 
                             </td>
 

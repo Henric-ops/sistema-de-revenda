@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Compra;
 use App\Models\Pagamento;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class RelatorioController extends Controller
 {
     public function index()
@@ -12,27 +14,32 @@ class RelatorioController extends Controller
         return view('relatorios.index');
     }
 
-    public function inadimplentes()
+    public function inadimplentesPdf()
     {
         $compras = Compra::where('status', '!=', 'pago')
             ->with('cliente', 'pagamentos')
             ->latest()
             ->get();
 
-        return view(
-            'relatorios.inadimplentes',
+        $pdf = Pdf::loadView(
+            'relatorios.pdf.inadimplentes',
             compact('compras')
         );
+
+        return $pdf->stream('clientes-inadimplentes.pdf');
     }
 
-    public function pagamentos()
+    public function pagamentosPdf()
     {
         $pagamentos = Pagamento::latest()
+            ->with('compra.cliente')
             ->get();
 
-        return view(
-            'relatorios.pagamentos',
+        $pdf = Pdf::loadView(
+            'relatorios.pdf.pagamentos',
             compact('pagamentos')
         );
+
+        return $pdf->stream('pagamentos.pdf');
     }
 }

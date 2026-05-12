@@ -8,6 +8,18 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\AuthController;
 
+
+Route::get(
+    '/relatorios/inadimplentes/pdf',
+    [RelatorioController::class, 'inadimplentesPdf']
+)->name('relatorios.inadimplentes.pdf');
+
+Route::get(
+    '/relatorios/pagamentos/pdf',
+    [RelatorioController::class, 'pagamentosPdf']
+)->name('relatorios.pagamentos.pdf');
+
+
 Route::get('/login', [AuthController::class, 'login'])
     ->name('login');
 

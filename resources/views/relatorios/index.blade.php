@@ -1,56 +1,88 @@
 @extends('layouts.app')
 
+@section('title', 'Relatórios')
+
 @section('content')
 
-    <div class="container">
+    <div class="page-header">
 
-        <h2 class="mb-4">
-            <i class="bi bi-graph-up"></i> Relatórios
-        </h2>
+        <div>
 
-        <div class="row">
+            <h2>
+                Central de Relatórios
+            </h2>
 
-            <!-- Clientes Inadimplentes -->
-            <div class="col-md-6 mb-4">
-                <a href="{{ route('relatorios.inadimplentes') }}" class="text-decoration-none">
-                    <div class="card shadow-sm h-100 border-0 report-card">
-                        <div class="card-body text-center">
-
-                            <div class="mb-3">
-                                <i class="bi bi-exclamation-triangle-fill display-5 text-danger"></i>
-                            </div>
-
-                            <h5 class="card-title">Clientes Inadimplentes</h5>
-                            <p class="text-muted">
-                                Visualize os clientes com pagamentos pendentes.
-                            </p>
-
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Pagamentos Recebidos -->
-            <div class="col-md-6 mb-4">
-                <a href="{{ route('relatorios.pagamentos') }}" class="text-decoration-none">
-                    <div class="card shadow-sm h-100 border-0 report-card">
-                        <div class="card-body text-center">
-
-                            <div class="mb-3">
-                                <i class="bi bi-cash-coin display-5 text-success"></i>
-                            </div>
-
-                            <h5 class="card-title">Pagamentos Recebidos</h5>
-                            <p class="text-muted">
-                                Consulte todos os pagamentos já realizados.
-                            </p>
-
-                        </div>
-                    </div>
-                </a>
-            </div>
+            <p>
+                Gere relatórios financeiros e acompanhe o desempenho da revenda.
+            </p>
 
         </div>
+
+    </div>
+
+    <div class="reports-grid">
+
+        {{-- RELATÓRIO INADIMPLENTES --}}
+        <a href="{{ route('relatorios.inadimplentes.pdf') }}" class="report-card-custom text-decoration-none">
+
+            <div class="report-icon danger">
+
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+            </div>
+
+            <div class="report-content">
+
+                <h3>
+                    Clientes Inadimplentes
+                </h3>
+
+                <p>
+                    Relatório completo com clientes que possuem pagamentos pendentes.
+                </p>
+
+                <span class="report-action">
+
+                    <i class="bi bi-file-earmark-pdf"></i>
+
+                    Gerar PDF
+
+                </span>
+
+            </div>
+
+        </a>
+
+        {{-- RELATÓRIO PAGAMENTOS --}}
+        <a href="{{ route('relatorios.pagamentos.pdf') }}" class="report-card-custom text-decoration-none">
+
+            <div class="report-icon success">
+
+                <i class="bi bi-cash-coin"></i>
+
+            </div>
+
+            <div class="report-content">
+
+                <h3>
+                    Pagamentos Recebidos
+                </h3>
+
+                <p>
+                    Histórico financeiro com todos os pagamentos registrados no sistema.
+                </p>
+
+                <span class="report-action">
+
+                    <i class="bi bi-file-earmark-pdf"></i>
+
+                    Gerar PDF
+
+                </span>
+
+            </div>
+
+        </a>
 
     </div>
 

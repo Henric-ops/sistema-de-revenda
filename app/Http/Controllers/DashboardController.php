@@ -17,12 +17,13 @@ class DashboardController extends Controller
 
         $totalRecebido = Pagamento::sum('valor_pago');
 
-        $totalVendas = Compra::sum('valor_total');
-
-        $totalAberto = $totalVendas - $totalRecebido;
+        // 🔥 saldo real em aberto
+        $totalAberto = Compra::with('pagamentos')
+            ->get()
+            ->sum('saldo_restante');
 
         $inadimplentes = Compra::where('status', '!=', 'pago')
-            ->with('cliente')
+            ->with(['cliente', 'pagamentos'])
             ->latest()
             ->take(5)
             ->get();
