@@ -1,19 +1,25 @@
-setTimeout(() => {
+function cobrarWhatsApp(telefone, nome, valor) {
+    telefone = telefone.replace(/\D/g, "");
 
-    const alerts = document.querySelectorAll('.alert');
+    if (!telefone.startsWith("55")) {
+        telefone = "55" + telefone;
+    }
 
-    alerts.forEach(alert => {
+    let mensagem =
+        "Olá " +
+        nome +
+        " 👋\n\n" +
+        "📌 Estou entrando em contato para lembrar sobre sua compra pendente.\n\n" +
+        "💰 Valor em aberto: R$ " +
+        valor +
+        "\n\n" +
+        "Poderia verificar o pagamento, por favor? 😊";
 
-        alert.style.transition = '.4s';
+    let url =
+        "https://api.whatsapp.com/send?phone=" +
+        telefone +
+        "&text=" +
+        encodeURIComponent(mensagem);
 
-        alert.style.opacity = '0';
-
-        setTimeout(() => {
-
-            alert.remove();
-
-        }, 400);
-
-    });
-
-}, 3000);
+    window.open(url, "_blank");
+}

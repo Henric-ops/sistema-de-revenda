@@ -4,6 +4,7 @@
 
 @section('content')
 
+
     <div class="page-header">
 
         <div>
@@ -52,74 +53,86 @@
 
                 @foreach($clientes as $cliente)
 
-                    <tr>
+                            <tr>
 
-                        <td>
+                                <td>
 
-                            <strong>
-                                {{ $cliente->nome }}
-                            </strong>
+                                    <strong>
+                                        {{ $cliente->nome }}
+                                    </strong>
 
-                        </td>
+                                </td>
 
-                        <td>
+                                <td>
 
-                            {{ $cliente->celular }}
+                                    {{ $cliente->celular }}
 
-                        </td>
+                                </td>
 
-                        <td>
+                                <td>
 
-                            @if($cliente->ativo)
+                                    @if($cliente->ativo)
 
-                                <span class="badge-status ativo">
-                                    Ativo
-                                </span>
+                                        <span class="badge-status ativo">
+                                            Ativo
+                                        </span>
 
-                            @else
+                                    @else
 
-                                <span class="badge-status inativo">
-                                    Inativo
-                                </span>
+                                        <span class="badge-status inativo">
+                                            Inativo
+                                        </span>
 
-                            @endif
+                                    @endif
 
-                        </td>
+                                </td>
 
-                        <td>
+                                <td>
 
-                            <div class="actions">
+                                    <div class="actions">
+                                        <button type="button" class="btn-action whatsapp" onclick="cobrarWhatsApp(
+                        '{{ $cliente->celular }}',
+                        '{{ $cliente->nome }}',
+                        '{{ number_format(
+                        $cliente->compras->sum('saldo_restante'),
+                        2,
+                        ',',
+                        '.'
+                    ) }}'
+                    )">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </button>
 
-                                <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-action view">
+                                        <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-action view">
 
-                                    <i class="bi bi-eye"></i>
+                                            <i class="bi bi-eye"></i>
 
-                                </a>
+                                        </a>
 
-                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-action edit">
+                                        <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-action edit">
 
-                                    <i class="bi bi-pencil"></i>
+                                            <i class="bi bi-pencil"></i>
 
-                                </a>
+                                        </a>
 
-                                <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST">
+                                        <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST">
 
-                                    @csrf
-                                    @method('DELETE')
+                                            @csrf
+                                            @method('DELETE')
 
-                                    <button type="submit" class="btn-action delete">
+                                            <button type="submit" class="btn-action delete">
 
-                                        <i class="bi bi-trash"></i>
+                                                <i class="bi bi-trash"></i>
 
-                                    </button>
+                                            </button>
 
-                                </form>
+                                        </form>
 
-                            </div>
+                                    </div>
 
-                        </td>
+                                </td>
 
-                    </tr>
+                            </tr>
 
                 @endforeach
 

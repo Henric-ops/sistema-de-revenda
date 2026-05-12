@@ -8,4 +8,25 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Paleta Terracota & Areia */
+    --color-terra: #9c4a30;
+    --color-terra-light: #c4693a;
+    --color-areia: #e8c4a0;
+    --color-cream: #faf4ee;
+    --color-cream-light: #fff9f4;
+    --color-gold: #c9a96e;
+
+    --color-primary: #9c4a30;
+    --color-secondary: #c4693a;
+    --color-accent: #c9a96e;
+    --color-bg: #faf4ee;
+    --color-bg-light: #fff9f4;
+
+    /* Cores semânticas */
+    --color-success: #2d6b42;
+    --color-warning: #d97706;
+    --color-danger: #dc2626;
+    --color-info: #0891b2;
 }
+

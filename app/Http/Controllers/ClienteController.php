@@ -13,7 +13,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::latest()->get();
+        $clientes = Cliente::with('compras.pagamentos')
+            ->latest()
+            ->get();
 
         return view('clientes.index', compact('clientes'));
     }

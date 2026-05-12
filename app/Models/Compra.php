@@ -27,4 +27,9 @@ class Compra extends Model
     {
         return $this->hasMany(Pagamento::class);
     }
+
+    public function getSaldoRestanteAttribute()
+    {
+        return $this->valor_total - $this->pagamentos->sum('valor_pago');
+    }
 }
