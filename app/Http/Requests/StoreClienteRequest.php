@@ -23,9 +23,26 @@ class StoreClienteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => 'required|string|max:255',
-            'celular' => 'required|string|max:20',
-            'observacoes' => 'nullable|string',
+            'nome' => 'required|string|max:255|min:3',
+            'celular' => 'required|string|max:20|min:10',
+            'observacoes' => 'nullable|string|max:1000',
+            'ativo' => 'nullable|boolean',
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'nome.required' => 'O nome é obrigatório.',
+            'nome.min' => 'O nome deve ter pelo menos 3 caracteres.',
+            'nome.max' => 'O nome não pode exceder 255 caracteres.',
+            'celular.required' => 'O celular é obrigatório.',
+            'celular.min' => 'O celular deve ter pelo menos 10 dígitos.',
+            'celular.max' => 'O celular não pode exceder 20 caracteres.',
+            'observacoes.max' => 'As observações não podem exceder 1000 caracteres.',
         ];
     }
 }

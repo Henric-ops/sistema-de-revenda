@@ -1120,3 +1120,8 @@ body {
         font-size: 24px;
     }
 }
+
+.report-icon.primary {
+    background: #eef4ff;
+    color: #3b82f6;
+}

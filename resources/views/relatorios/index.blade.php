@@ -250,7 +250,7 @@
             </div>
 
             <div class="relatorio-footer">
-               
+
                 <span class="relatorio-btn success">
                     Gerar PDF
                     <i class="bi bi-arrow-right"></i>
@@ -259,6 +259,7 @@
 
         </a>
 
-    </div>
+
+      
 
 @endsection

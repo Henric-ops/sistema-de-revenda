@@ -13,6 +13,7 @@ class ClienteController extends Controller
      */
     public function index()
     {
+        
         $clientes = Cliente::with('compras.pagamentos')
             ->latest()
             ->get();
@@ -25,6 +26,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
+        
         return view('clientes.create');
     }
 
@@ -33,6 +35,7 @@ class ClienteController extends Controller
      */
     public function store(StoreClienteRequest $request)
     {
+        
         Cliente::create([
             'nome' => $request->nome,
             'celular' => $request->celular,
@@ -50,6 +53,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
+        
         $cliente->load('compras.pagamentos');
 
         return view(
@@ -63,6 +67,7 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
+        
         return view('clientes.edit', compact('cliente'));
     }
 
@@ -71,6 +76,7 @@ class ClienteController extends Controller
      */
     public function update(UpdateClienteRequest $request, Cliente $cliente)
     {
+        
         $cliente->update([
             'nome' => $request->nome,
             'celular' => $request->celular,
@@ -87,6 +93,7 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
+        
         $cliente->delete();
 
         return redirect()

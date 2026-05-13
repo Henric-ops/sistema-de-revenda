@@ -61,7 +61,8 @@
                     Descrição dos Produtos
                 </label>
 
-                <textarea name="descricao_produtos" rows="3" placeholder="Descreva os produtos ou serviços..." required>{{ old('descricao_produtos', $compra->descricao_produtos) }}</textarea>
+                <textarea name="descricao_produtos" rows="3" placeholder="Descreva os produtos ou serviços..."
+                    required>{{ old('descricao_produtos', $compra->descricao_produtos) }}</textarea>
 
                 @error('descricao_produtos')
                     <span class="error-message">{{ $message }}</span>
@@ -76,7 +77,8 @@
                     Valor Total
                 </label>
 
-                <input type="number" step="0.01" name="valor_total" value="{{ old('valor_total', $compra->valor_total) }}" placeholder="0,00" required>
+                <input type="number" step="0.01" name="valor_total" value="{{ old('valor_total', $compra->valor_total) }}"
+                    placeholder="0,00" required>
 
                 @error('valor_total')
                     <span class="error-message">{{ $message }}</span>
@@ -97,15 +99,25 @@
                         Selecione a forma
                     </option>
 
-                    <option value="Pix" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'Pix')>Pix</option>
+                    <option value="pix" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'pix')>
+                        Pix
+                    </option>
 
-                    <option value="Dinheiro" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'Dinheiro')>Dinheiro</option>
+                    <option value="dinheiro" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'dinheiro')>
+                        Dinheiro
+                    </option>
 
-                    <option value="Cartão Débito" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'Cartão Débito')>Cartão Débito</option>
+                    <option value="debito" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'debito')>
+                        Cartão Débito
+                    </option>
 
-                    <option value="Cartão Crédito" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'Cartão Crédito')>Cartão Crédito</option>
+                    <option value="credito" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'credito')>
+                        Cartão Crédito
+                    </option>
 
-                    <option value="Crediário" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'Crediário')>Crediário</option>
+                    <option value="crediario" @selected(old('forma_pagamento', $compra->forma_pagamento) == 'crediario')>
+                        Crediário
+                    </option>
 
                 </select>
 
@@ -122,7 +134,8 @@
                     Quantidade de Parcelas
                 </label>
 
-                <input type="number" name="qtd_parcelas" value="{{ old('qtd_parcelas', $compra->qtd_parcelas) }}" placeholder="Ex: 3" required>
+                <input type="number" name="qtd_parcelas" value="{{ old('qtd_parcelas', $compra->qtd_parcelas) }}"
+                    placeholder="Ex: 3" required>
 
                 @error('qtd_parcelas')
                     <span class="error-message">{{ $message }}</span>
@@ -152,7 +165,8 @@
                     Observações
                 </label>
 
-                <textarea name="observacoes" rows="3" placeholder="Observações adicionais...">{{ old('observacoes', $compra->observacoes) }}</textarea>
+                <textarea name="observacoes" rows="3"
+                    placeholder="Observações adicionais...">{{ old('observacoes', $compra->observacoes) }}</textarea>
 
                 @error('observacoes')
                     <span class="error-message">{{ $message }}</span>

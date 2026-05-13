@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\AuthController;
 
+Route::get('/relatorios/compras-periodo', [RelatorioController::class, 'comprasPeriodo'])
+    ->name('relatorios.compras-periodo');
 
 Route::get(
     '/relatorios/inadimplentes/pdf',
@@ -41,11 +43,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('compras', CompraController::class);
 
-    Route::post('/pagamentos', [PagamentoController::class, 'store'])
-        ->name('pagamentos.store');
-
-    Route::delete('/pagamentos/{pagamento}', [PagamentoController::class, 'destroy'])
-        ->name('pagamentos.destroy');
+    Route::resource('pagamentos', PagamentoController::class);
 
     Route::get('/relatorios', [RelatorioController::class, 'index'])
         ->name('relatorios.index');

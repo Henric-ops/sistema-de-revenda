@@ -12,9 +12,36 @@ class PagamentoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $this->authorize('viewAny', Pagamento::class);
+
+        $query = Pagamento::with('compra.cliente');
+
+        // Filtro por compra
+        if ($request->filled('compra_id')) {
+            $query->where('compra_id', $request->compra_id);
+        }
+
+        // Busca por método de pagamento
+        if ($request->filled('metodo')) {
+            $query->where('metodo_pagamento', 'LIKE', '%' . $request->metodo . '%');
+        }
+
+        // Filtro por data
+        if ($request->filled('data_inicio') && $request->filled('data_fim')) {
+            $query->whereBetween('data_pagamento', [
+                $request->data_inicio,
+                $request->data_fim,
+            ]);
+        }
+
+        $pagamentos = $query
+            ->orderByDesc('data_pagamento')
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('pagamentos.index', compact('pagamentos'));
     }
 
     /**
@@ -22,7 +49,13 @@ class PagamentoController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Pagamento::class);
+
+        $compras = Compra::with('cliente')
+            ->where('status', '!=', 'pago')
+            ->get();
+
+        return view('pagamentos.create', compact('compras'));
     }
 
     /**
@@ -30,6 +63,8 @@ class PagamentoController extends Controller
      */
     public function store(StorePagamentosRequest $request)
     {
+        $this->authorize('create', Pagamento::class);
+        
         Pagamento::create([
 
             'compra_id' => $request->compra_id,
@@ -71,7 +106,11 @@ class PagamentoController extends Controller
      */
     public function show(Pagamento $pagamento)
     {
-        //
+        $this->authorize('view', $pagamento);
+
+        $pagamento->load('compra.cliente');
+
+        return view('pagamentos.show', compact('pagamento'));
     }
 
     /**
@@ -79,7 +118,14 @@ class PagamentoController extends Controller
      */
     public function edit(Pagamento $pagamento)
     {
-        //
+        $this->authorize('update', $pagamento);
+
+        $compras = Compra::with('cliente')
+            ->where('status', '!=', 'pago')
+            ->orWhere('id', $pagamento->compra_id)
+            ->get();
+
+        return view('pagamentos.edit', compact('pagamento', 'compras'));
     }
 
     /**
@@ -87,7 +133,48 @@ class PagamentoController extends Controller
      */
     public function update(UpdatePagamentosRequest $request, Pagamento $pagamento)
     {
-        //
+        $this->authorize('update', $pagamento);
+
+        $compraAnterior = $pagamento->compra;
+
+        $pagamento->update([
+            'compra_id' => $request->compra_id,
+            'valor_pago' => $request->valor_pago,
+            'metodo_pagamento' => $request->metodo_pagamento,
+            'data_pagamento' => $request->data_pagamento,
+            'observacoes' => $request->observacoes,
+        ]);
+
+        // Recalcular status da compra antiga
+        $totalPagoAnterior = $compraAnterior->pagamentos
+            ->where('id', '!=', $pagamento->id)
+            ->sum('valor_pago');
+
+        if ($totalPagoAnterior <= 0) {
+            $compraAnterior->status = 'pendente';
+        } elseif ($totalPagoAnterior < $compraAnterior->valor_total) {
+            $compraAnterior->status = 'parcialmente_pago';
+        } else {
+            $compraAnterior->status = 'pago';
+        }
+        $compraAnterior->save();
+
+        // Recalcular status da compra nova
+        $compraAtual = $pagamento->compra->fresh();
+        $totalPagoAtual = $compraAtual->pagamentos()->sum('valor_pago');
+
+        if ($totalPagoAtual <= 0) {
+            $compraAtual->status = 'pendente';
+        } elseif ($totalPagoAtual < $compraAtual->valor_total) {
+            $compraAtual->status = 'parcialmente_pago';
+        } else {
+            $compraAtual->status = 'pago';
+        }
+        $compraAtual->save();
+
+        return redirect()
+            ->route('pagamentos.show', $pagamento)
+            ->with('success', 'Pagamento atualizado com sucesso!');
     }
 
     /**
@@ -95,8 +182,10 @@ class PagamentoController extends Controller
      */
     public function destroy(Pagamento $pagamento)
     {
-        $compra = $pagamento->compra;
+        $this->authorize('delete', $pagamento);
         
+        $compra = $pagamento->compra;
+
         $pagamento->delete();
 
         // Recalcular status da compra

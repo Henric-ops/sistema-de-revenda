@@ -494,7 +494,6 @@
                                     @endphp
                                     <div class="data-cell">
                                         <span class="dia">{{ $data->format('d/m/Y') }}</span>
-                                        <span class="ano">{{ $data->diffForHumans() }}</span>
                                     </div>
                                 </td>
                             </tr>
