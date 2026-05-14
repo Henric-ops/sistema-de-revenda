@@ -3,101 +3,151 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use App\Http\Requests\StoreClienteRequest;
+use App\Models\User;
 use App\Http\Requests\UpdateClienteRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ClienteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        
-        $clientes = Cliente::with('compras.pagamentos')
+        $clientes = Cliente::with('compras.pagamentos', 'user')
             ->latest()
             ->get();
 
         return view('clientes.index', compact('clientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        
         return view('clientes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreClienteRequest $request)
+    public function store(Request $request)
     {
-        
-        Cliente::create([
-            'nome' => $request->nome,
-            'celular' => $request->celular,
-            'observacoes' => $request->observacoes,
-            'ativo' => true,
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'celular' => 'required|string|max:20',
+            'observacoes' => 'nullable|string'
         ]);
 
-        return redirect()
-            ->route('clientes.index')
-            ->with('success', 'Cliente cadastrado com sucesso!');
+        try {
+
+            DB::transaction(function () use ($request) {
+
+                $celular = preg_replace('/\D/', '', $request->celular);
+
+                // cria usuário SEM senha automática enviada
+                $user = User::create([
+                    'name' => $request->nome,
+                    'phone' => $celular,
+                    'password' => Hash::make(Str::random(8)), // senha existe, mas não é enviada
+                    'tipo' => 'cliente'
+                ]);
+
+                Cliente::create([
+                    'user_id' => $user->id,
+                    'nome' => $request->nome,
+                    'celular' => $request->celular,
+                    'observacoes' => $request->observacoes ?? null,
+                    'ativo' => true,
+                ]);
+
+            });
+
+            return redirect()
+                ->route('clientes.index')
+                ->with('success', 'Cliente cadastrado com sucesso!');
+
+        } catch (\Exception $e) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Cliente $cliente)
     {
-        
         $cliente->load('compras.pagamentos');
-
-        return view(
-            'clientes.show',
-            compact('cliente')
-        );
+        return view('clientes.show', compact('cliente'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Cliente $cliente)
     {
-        
         return view('clientes.edit', compact('cliente'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateClienteRequest $request, Cliente $cliente)
     {
-        
+        $celular = preg_replace('/\D/', '', $request->celular);
+
         $cliente->update([
             'nome' => $request->nome,
             'celular' => $request->celular,
             'observacoes' => $request->observacoes,
         ]);
 
+        if ($cliente->user) {
+            $cliente->user->update([
+                'name' => $request->nome,
+                'phone' => $celular,
+            ]);
+        }
+
         return redirect()
             ->route('clientes.index')
             ->with('success', 'Cliente atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Cliente $cliente)
     {
-        
+        if ($cliente->user) {
+            $cliente->user->delete();
+        }
+
         $cliente->delete();
 
         return redirect()
             ->route('clientes.index')
             ->with('success', 'Cliente deletado com sucesso!');
+    }
+
+    public function reenviarAcesso(Cliente $cliente)
+    {
+        if (!$cliente->user) {
+            return redirect()
+                ->route('clientes.index')
+                ->with('error', 'Cliente sem usuário vinculado.');
+        }
+
+        $celular = preg_replace('/\D/', '', $cliente->celular);
+
+        $senha = Str::random(8);
+        $cliente->user->update([
+            'password' => Hash::make($senha),
+        ]);
+
+        $numero = $celular;
+
+        if (!str_starts_with($numero, '55')) {
+            $numero = '55' . $numero;
+        }
+
+        $mensagem = urlencode(
+            "Olá {$cliente->nome}! 👋\n\n" .
+            "Seu acesso foi reenviado:\n\n" .
+            "📱 Login: {$celular}\n" .
+            "🔑 Nova Senha: {$senha}\n\n" .
+            "Acesse o sistema e altere sua senha após o primeiro login."
+        );
+
+        $whatsappUrl = "https://wa.me/{$numero}?text={$mensagem}";
+
+        return redirect($whatsappUrl);
     }
 }

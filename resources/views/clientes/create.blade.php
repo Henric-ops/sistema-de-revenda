@@ -244,6 +244,16 @@
 
         {{-- CARD --}}
         <div class="create-card">
+
+            @if ($errors->any())
+                <div class="alert alert-danger mb-3">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form action="{{ route('clientes.store') }}" method="POST" id="form-cliente">
                 @csrf
 
@@ -260,7 +270,9 @@
                                 value="{{ old('nome') }}" maxlength="100" required>
                         </div>
                         @error('nome')
-                            <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
+                            <div class="field-error">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
@@ -274,12 +286,16 @@
                             <input type="text" id="celular" name="celular" placeholder="(55) 99999-9999"
                                 value="{{ old('celular') }}" maxlength="16" required>
                         </div>
+
                         <div class="field-hint">
                             <i class="bi bi-info-circle"></i>
-                            Será usado para contato via WhatsApp
+                            Será usado como login do cliente no sistema
                         </div>
+
                         @error('celular')
-                            <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
+                            <div class="field-error">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
@@ -292,16 +308,21 @@
                             Observações
                             <span style="font-weight:400; color:#c0a898; font-size:12px;">(opcional)</span>
                         </label>
+
                         <div class="field-wrap">
                             <textarea id="observacoes" name="observacoes" rows="4"
                                 placeholder="Anote informações relevantes sobre este cliente..."
                                 maxlength="500">{{ old('observacoes') }}</textarea>
                         </div>
+
                         <div class="field-footer">
                             <span class="char-count" id="char-count">0 / 500</span>
                         </div>
+
                         @error('observacoes')
-                            <div class="field-error"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
+                            <div class="field-error">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </div>
                         @enderror
                     </div>
 
@@ -313,6 +334,7 @@
                         <i class="bi bi-check-circle"></i>
                         Salvar Cliente
                     </button>
+
                     <a href="{{ route('clientes.index') }}" class="btn-cancelar">
                         <i class="bi bi-arrow-left"></i>
                         Voltar

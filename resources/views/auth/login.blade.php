@@ -52,17 +52,17 @@
 
             @csrf
 
-            {{-- EMAIL --}}
+            {{-- LOGIN (EMAIL OU CELULAR) --}}
             <div class="field floating">
 
                 <div class="field-wrap">
 
-                    <i class="bi bi-envelope f-icon"></i>
+                    <i class="bi bi-person f-icon"></i>
 
-                    <input type="email" id="email" name="email" placeholder=" " value="{{ old('email') }}" required
+                    <input type="text" id="login" name="login" placeholder=" " value="{{ old('login') }}" required
                         autofocus>
 
-                    <label for="email">E-mail</label>
+                    <label for="login">E-mail ou Celular</label>
 
                 </div>
 
