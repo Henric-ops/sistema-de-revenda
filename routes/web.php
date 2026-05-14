@@ -8,33 +8,34 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\AuthController;
 
+
+
+Route::redirect('/', '/login');// Redireciona para a página de login
+
 Route::get('/relatorios/compras-periodo', [RelatorioController::class, 'comprasPeriodo'])
-    ->name('relatorios.compras-periodo');
+    ->name('relatorios.compras-periodo');// Rota para exibir o formulário de relatório de compras por período
 
 Route::get(
     '/relatorios/inadimplentes/pdf',
     [RelatorioController::class, 'inadimplentesPdf']
-)->name('relatorios.inadimplentes.pdf');
+)->name('relatorios.inadimplentes.pdf');// Rota para gerar PDF do relatório de inadimplentes
 
 Route::get(
     '/relatorios/pagamentos/pdf',
     [RelatorioController::class, 'pagamentosPdf']
-)->name('relatorios.pagamentos.pdf');
+)->name('relatorios.pagamentos.pdf');// Rota para gerar PDF do relatório de pagamentos
 
 
 Route::get('/login', [AuthController::class, 'login'])
-    ->name('login');
+    ->name('login');// Rota para exibir o formulário de login
 
-Route::post('/login', [AuthController::class, 'auth']);
+Route::post('/login', [AuthController::class, 'auth']);// Rota para processar o login
 
-Route::post('/logout', [AuthController::class, 'logout'])
+Route::post('/logout', [AuthController::class, 'logout'])// Rota para processar o logout
     ->name('logout');
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {// Rotas protegidas por autenticação
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');

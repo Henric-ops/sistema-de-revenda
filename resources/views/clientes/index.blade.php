@@ -368,74 +368,76 @@
                 </thead>
                 <tbody>
                     @foreach($clientes as $cliente)
-                        <tr data-busca="{{ strtolower($cliente->nome . ' ' . $cliente->celular) }}">
+                                <tr data-busca="{{ strtolower($cliente->nome . ' ' . $cliente->celular) }}">
 
-                            {{-- Nome --}}
-                            <td>
-                                <div class="cliente-cell">
-                                    <div class="cliente-avatar">
-                                        {{ strtoupper(substr($cliente->nome, 0, 1)) }}
-                                    </div>
-                                    <span class="cliente-nome">{{ $cliente->nome }}</span>
-                                </div>
-                            </td>
+                                    {{-- Nome --}}
+                                    <td>
+                                        <div class="cliente-cell">
+                                            <div class="cliente-avatar">
+                                                {{ strtoupper(substr($cliente->nome, 0, 1)) }}
+                                            </div>
+                                            <span class="cliente-nome">{{ $cliente->nome }}</span>
+                                        </div>
+                                    </td>
 
-                            {{-- Celular --}}
-                            <td>
-                                <div class="celular-cell">
-                                    <i class="bi bi-telephone"></i>
-                                    {{ $cliente->celular }}
-                                </div>
-                            </td>
+                                    {{-- Celular --}}
+                                    <td>
+                                        <div class="celular-cell">
+                                            <i class="bi bi-telephone"></i>
+                                            {{ $cliente->celular }}
+                                        </div>
+                                    </td>
 
-                            {{-- Status --}}
-                            <td>
-                                @if($cliente->ativo)
-                                    <span class="badge-pill ativo">Ativo</span>
-                                @else
-                                    <span class="badge-pill inativo">Inativo</span>
-                                @endif
-                            </td>
+                                    {{-- Status --}}
+                                    <td>
+                                        @if($cliente->ativo)
+                                            <span class="badge-pill ativo">Ativo</span>
+                                        @else
+                                            <span class="badge-pill inativo">Inativo</span>
+                                        @endif
+                                    </td>
 
-                            {{-- Ações --}}
-                            <td>
-                                <div class="acoes-cell">
+                                    {{-- Ações --}}
+                                    <td>
+                                        <div class="acoes-cell">
 
-                                    {{-- WhatsApp --}}
-                                    <button type="button" class="btn-ic whatsapp" title="Cobrar via WhatsApp" onclick="cobrarWhatsApp(
-                                                        '{{ $cliente->celular }}',
-                                                        '{{ $cliente->nome }}',
-                                                        '{{ number_format($cliente->compras->sum('saldo_restante'), 2, ',', '.') }}'
-                                                    )">
-                                        <i class="bi bi-whatsapp"></i>
-                                    </button>
+                                            {{-- WhatsApp --}}
+                                            <button type="button" class="btn-ic whatsapp" title="Cobrar via WhatsApp" onclick="cobrarWhatsApp(
+                            '{{ $cliente->celular }}',
+                            '{{ $cliente->nome }}',
+                            '{{ number_format($cliente->compras->sum('saldo_restante'), 2, ',', '.') }}',
+                            '{{ $cliente->compras->pluck('descricao_produtos')->implode(', ') }}'
+                        )">
 
-                                    <div class="acoes-divider"></div>
+                                                <i class="bi bi-whatsapp"></i>
+                                            </button>
 
-                                    {{-- Ver --}}
-                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-ic view" title="Ver perfil">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                            <div class="acoes-divider"></div>
 
-                                    {{-- Editar --}}
-                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-ic edit" title="Editar">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                            {{-- Ver --}}
+                                            <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-ic view" title="Ver perfil">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
 
-                                    {{-- Excluir --}}
-                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir {{ $cliente->nome }}?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-ic delete" title="Excluir">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                            {{-- Editar --}}
+                                            <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-ic edit" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
 
-                                </div>
-                            </td>
+                                            {{-- Excluir --}}
+                                            <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST"
+                                                onsubmit="return confirm('Tem certeza que deseja excluir {{ $cliente->nome }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-ic delete" title="Excluir">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
 
-                        </tr>
+                                        </div>
+                                    </td>
+
+                                </tr>
                     @endforeach
                 </tbody>
             </table>

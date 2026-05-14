@@ -14,7 +14,6 @@ class PagamentoController extends Controller
      */
     public function index(Request $request)
     {
-        $this->authorize('viewAny', Pagamento::class);
 
         $query = Pagamento::with('compra.cliente');
 
@@ -49,7 +48,6 @@ class PagamentoController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Pagamento::class);
 
         $compras = Compra::with('cliente')
             ->where('status', '!=', 'pago')
@@ -63,8 +61,7 @@ class PagamentoController extends Controller
      */
     public function store(StorePagamentosRequest $request)
     {
-        $this->authorize('create', Pagamento::class);
-        
+
         Pagamento::create([
 
             'compra_id' => $request->compra_id,
@@ -106,8 +103,6 @@ class PagamentoController extends Controller
      */
     public function show(Pagamento $pagamento)
     {
-        $this->authorize('view', $pagamento);
-
         $pagamento->load('compra.cliente');
 
         return view('pagamentos.show', compact('pagamento'));
@@ -118,7 +113,6 @@ class PagamentoController extends Controller
      */
     public function edit(Pagamento $pagamento)
     {
-        $this->authorize('update', $pagamento);
 
         $compras = Compra::with('cliente')
             ->where('status', '!=', 'pago')
@@ -133,7 +127,6 @@ class PagamentoController extends Controller
      */
     public function update(UpdatePagamentosRequest $request, Pagamento $pagamento)
     {
-        $this->authorize('update', $pagamento);
 
         $compraAnterior = $pagamento->compra;
 
@@ -182,8 +175,7 @@ class PagamentoController extends Controller
      */
     public function destroy(Pagamento $pagamento)
     {
-        $this->authorize('delete', $pagamento);
-        
+
         $compra = $pagamento->compra;
 
         $pagamento->delete();

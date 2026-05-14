@@ -1,4 +1,5 @@
-function cobrarWhatsApp(telefone, nome, valor) {
+function cobrarWhatsApp(telefone, nome, valor, produtos) {
+
     telefone = telefone.replace(/\D/g, "");
 
     if (!telefone.startsWith("55")) {
@@ -6,14 +7,11 @@ function cobrarWhatsApp(telefone, nome, valor) {
     }
 
     let mensagem =
-        "Olá " +
-        nome +
-        " 👋\n\n" +
-        "📌 Estou entrando em contato para lembrar sobre sua compra pendente.\n\n" +
-        "💰 Valor em aberto: R$ " +
-        valor +
-        "\n\n" +
-        "Poderia verificar o pagamento, por favor? 😊";
+        "Oii, " + nome + "!" + " Tudo bem? 😊 \n\n" +
+        "Estou passando sobre sua compra:\n\n" +
+        "🛍️ " + produtos + "\n\n" +
+        "💳 Valor: *R$ " + valor + "*\n\n" +
+        "Quando puder, me dá um retorno sobre o acerto do pagamento, tá bom? Obrigada! 🙏";
 
     let url =
         "https://api.whatsapp.com/send?phone=" +
