@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Compra;
 use App\Models\Pagamento;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -32,13 +33,46 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 📊 GRÁFICOS (últimos 6 meses)
+        $meses = [];
+        $valoresRecebidos = [];
+        $valoresInadimplencia = [];
+
+        for ($i = 5; $i >= 0; $i--) {
+
+            $mes = Carbon::now()->subMonths($i);
+
+            $meses[] = $mes->format('M/Y');
+
+            // 💰 TOTAL RECEBIDO NO MÊS
+            $valoresRecebidos[] = Pagamento::whereYear('data_pagamento', $mes->year)
+                ->whereMonth('data_pagamento', $mes->month)
+                ->sum('valor_pago');
+
+            // ⚠️ INADIMPLÊNCIA DO MÊS
+            $comprasMes = Compra::with('pagamentos')
+                ->whereYear('created_at', $mes->year)
+                ->whereMonth('created_at', $mes->month)
+                ->get();
+
+            $valoresInadimplencia[] = $comprasMes->sum(function ($compra) {
+
+                $totalPago = $compra->pagamentos->sum('valor_pago');
+
+                return $compra->valor_total - $totalPago;
+            });
+        }
+
         return view('dashboard.index', compact(
             'totalClientes',
             'totalCompras',
             'totalRecebido',
             'totalAberto',
             'inadimplentes',
-            'ultimosPagamentos'
+            'ultimosPagamentos',
+            'meses',
+            'valoresRecebidos',
+            'valoresInadimplencia'
         ));
     }
 }

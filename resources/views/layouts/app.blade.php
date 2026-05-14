@@ -138,6 +138,7 @@
     {{-- JS específico de cada página --}}
     @stack('scripts')
 
+
 </body>
 
 </html>

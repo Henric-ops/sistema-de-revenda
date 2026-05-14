@@ -342,6 +342,9 @@
 
 @section('content')
 
+    <link rel="stylesheet" href="{{ asset('css/grafico.css') }}">
+
+
     {{-- ── CARDS ─────────────────────────────────────── --}}
     <div class="dash-cards">
 
@@ -399,6 +402,92 @@
                 <div class="dash-card-value">R$ {{ number_format($totalAberto, 2, ',', '.') }}</div>
                 <div class="dash-card-sub">aguardando pagamento</div>
             </div>
+        </div>
+
+    </div>
+    {{-- ── GRÁFICOS ─────────────────────────────────── --}}
+    <div class="dash-graficos">
+
+        {{-- RECEBIMENTOS --}}
+        <div class="grafico-card grafico-recebimentos">
+
+            <div class="grafico-top">
+
+                <div>
+                    <span class="grafico-tag">
+                        Receita
+                    </span>
+
+                    <h3>
+                        Recebimentos Mensais
+                    </h3>
+
+                    <p>
+                        Evolução dos pagamentos recebidos
+                    </p>
+                </div>
+
+                <div class="grafico-icon">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+
+            </div>
+
+            <div class="grafico-info">
+                <h2>
+                    R$ {{ number_format($totalRecebido, 2, ',', '.') }}
+                </h2>
+
+                <span>
+                    Total acumulado
+                </span>
+            </div>
+
+            <div class="grafico-body">
+                <canvas id="graficoRecebimentos"></canvas>
+            </div>
+
+        </div>
+
+        {{-- INADIMPLÊNCIA --}}
+        <div class="grafico-card grafico-inadimplencia">
+
+            <div class="grafico-top">
+
+                <div>
+                    <span class="grafico-tag danger">
+                        Atenção
+                    </span>
+
+                    <h3>
+                        Inadimplência
+                    </h3>
+
+                    <p>
+                        Valores pendentes por período
+                    </p>
+                </div>
+
+                <div class="grafico-icon danger">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+
+            </div>
+
+            <div class="grafico-info">
+                <h2>
+                    R$ {{ number_format($totalAberto, 2, ',', '.') }}
+                </h2>
+
+                <span>
+                    Em aberto atualmente
+                </span>
+            </div>
+
+            <div class="grafico-body">
+                <canvas id="graficoInadimplencia"></canvas>
+            </div>
+
         </div>
 
     </div>
@@ -510,4 +599,293 @@
 
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const canvas = document.getElementById('graficoRecebimentos');
+
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            // GRADIENTE
+            const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+
+            gradient.addColorStop(0, 'rgba(201, 132, 122, 0.45)');
+            gradient.addColorStop(1, 'rgba(201, 132, 122, 0.02)');
+
+            new Chart(ctx, {
+
+                type: 'line',
+
+                data: {
+
+                    labels: {!! json_encode($meses) !!},
+
+                    datasets: [{
+
+                        label: 'Recebimentos',
+
+                        data: {!! json_encode($valoresRecebidos) !!},
+
+                        borderColor: '#c9847a',
+
+                        backgroundColor: gradient,
+
+                        fill: true,
+
+                        borderWidth: 4,
+
+                        tension: 0.45,
+
+                        pointRadius: 0,
+
+                        pointHoverRadius: 7,
+
+                        pointHoverBorderWidth: 3,
+
+                        pointHoverBackgroundColor: '#fff',
+
+                        pointHoverBorderColor: '#c9847a',
+                    }]
+                },
+
+                options: {
+
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    animation: {
+                        duration: 1800,
+                        easing: 'easeOutQuart'
+                    },
+
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+
+                            backgroundColor: '#fff',
+
+                            titleColor: '#2a1a10',
+
+                            bodyColor: '#2a1a10',
+
+                            borderColor: '#f1dfd6',
+
+                            borderWidth: 1,
+
+                            padding: 14,
+
+                            displayColors: false,
+
+                            titleFont: {
+                                weight: '700'
+                            },
+
+                            bodyFont: {
+                                weight: '600'
+                            },
+
+                            callbacks: {
+                                label: function (context) {
+                                    return 'R$ ' + context.raw.toLocaleString('pt-BR', {
+                                        minimumFractionDigits: 2
+                                    });
+                                }
+                            }
+                        }
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+                                display: false
+                            },
+
+                            border: {
+                                display: false
+                            },
+
+                            ticks: {
+                                color: '#9c7a6a',
+
+                                font: {
+                                    size: 12,
+                                    weight: '600'
+                                }
+                            }
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            border: {
+                                display: false
+                            },
+
+                            grid: {
+                                color: 'rgba(0,0,0,0.045)',
+                                drawTicks: false
+                            },
+
+                            ticks: {
+
+                                padding: 10,
+
+                                color: '#9c7a6a',
+
+                                callback: function (value) {
+                                    return 'R$ ' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const canvas = document.getElementById('graficoInadimplencia');
+
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, 350);
+
+            gradient.addColorStop(0, 'rgba(220, 53, 69, 0.85)');
+            gradient.addColorStop(1, 'rgba(220, 53, 69, 0.35)');
+
+            new Chart(ctx, {
+
+                type: 'bar',
+
+                data: {
+
+                    labels: {!! json_encode($meses) !!},
+
+                    datasets: [{
+
+                        label: 'Saldo em Aberto',
+
+                        data: {!! json_encode($valoresInadimplencia) !!},
+
+                        backgroundColor: gradient,
+
+                        borderRadius: 14,
+
+                        borderSkipped: false,
+
+                        hoverBackgroundColor: '#dc3545',
+
+                        barThickness: 42
+                    }]
+                },
+
+                options: {
+
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    animation: {
+                        duration: 1600,
+                        easing: 'easeOutQuart'
+                    },
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+
+                            backgroundColor: '#fff',
+
+                            titleColor: '#2a1a10',
+
+                            bodyColor: '#2a1a10',
+
+                            borderColor: '#f1dfd6',
+
+                            borderWidth: 1,
+
+                            padding: 14,
+
+                            displayColors: false,
+
+                            callbacks: {
+                                label: function (context) {
+                                    return 'R$ ' + context.raw.toLocaleString('pt-BR', {
+                                        minimumFractionDigits: 2
+                                    });
+                                }
+                            }
+                        }
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+                                display: false
+                            },
+
+                            border: {
+                                display: false
+                            },
+
+                            ticks: {
+                                color: '#9c7a6a',
+
+                                font: {
+                                    weight: '600'
+                                }
+                            }
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            border: {
+                                display: false
+                            },
+
+                            grid: {
+                                color: 'rgba(0,0,0,0.045)'
+                            },
+
+                            ticks: {
+
+                                color: '#9c7a6a',
+
+                                callback: function (value) {
+                                    return 'R$ ' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
 @endsection
