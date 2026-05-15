@@ -224,12 +224,7 @@
         .acoes-cell {
             display: flex;
             align-items: center;
-            gap: 4px;
-            background: #faf6f2;
-            border: 1px solid #f0e6dc;
-            border-radius: 14px;
-            padding: 5px;
-            width: fit-content;
+            gap: 8px;
         }
 
         .btn-ic {
@@ -241,49 +236,86 @@
             justify-content: center;
             text-decoration: none;
             border: none;
-            background: transparent;
+
             cursor: pointer;
-            font-size: 15px;
-            transition: background .18s, color .18s, transform .18s;
+            position: relative;
+            overflow: hidden;
+
+            transition:
+                transform .22s ease,
+                background .22s ease,
+                color .22s ease,
+                box-shadow .22s ease;
         }
 
+        /* efeito hover geral */
         .btn-ic:hover {
-            transform: scale(1.08);
+            transform: translateY(-3px) scale(1.05);
         }
 
+        /* efeito clique */
+        .btn-ic:active {
+            transform: scale(.96);
+        }
+
+        /* glow */
+        .btn-ic::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity .22s ease;
+        }
+
+        .btn-ic:hover::after {
+            opacity: 1;
+        }
+
+        /* visualizar */
         .btn-ic.view {
             color: #3a7bfd;
         }
 
-        .btn-ic.edit {
-            color: #c08800;
+        .btn-ic.view:hover {
+            background: #dcecff;
+            color: #1e63e9;
+            box-shadow: 0 8px 18px rgba(58, 123, 253, .22);
         }
 
+        /* editar */
+        .btn-ic.edit {
+
+            background: #fff8e8;
+            color: #d69b00;
+        }
+
+        .btn-ic.edit:hover {
+            background: #ffefbf;
+            color: #b37d00;
+            box-shadow: 0 8px 18px rgba(214, 155, 0, .22);
+        }
+
+        /* excluir */
         .btn-ic.delete {
             color: #d94b4b;
         }
 
-        .btn-ic.view:hover {
-            background: #e8f0ff;
-            color: #1a5bdd;
-        }
-
-        .btn-ic.edit:hover {
-            background: #fff3cc;
-            color: #a07000;
-        }
 
         .btn-ic.delete:hover {
-            background: #ffeaea;
-            color: #b83030;
+            background: #ffd8d8;
+            color: #bc3030;
+            box-shadow: 0 8px 18px rgba(217, 75, 75, .22);
         }
 
-        .btn-ic-sep {
-            width: 1px;
-            height: 20px;
-            background: #ede0d4;
-            flex-shrink: 0;
-            border-radius: 1px;
+        /* ícones */
+        .btn-ic i {
+            font-size: 15px;
+            transition: transform .18s ease;
+        }
+
+        .btn-ic:hover i {
+            transform: scale(1.08);
         }
 
         /* ── VAZIO ───────────────────────────────────────── */
@@ -435,26 +467,31 @@
 
                             <td>
                                 <div class="acoes-cell">
+
+
                                     <a href="{{ route('compras.show', $compra->id) }}" class="btn-ic view" title="Ver detalhes">
+
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    <div class="btn-ic-sep"></div>
-
                                     <a href="{{ route('compras.edit', $compra->id) }}" class="btn-ic edit" title="Editar compra">
+
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
-                                    <div class="btn-ic-sep"></div>
-
                                     <form action="{{ route('compras.destroy', $compra->id) }}" method="POST"
                                         onsubmit="return confirm('Excluir esta compra?')">
+
                                         @csrf
                                         @method('DELETE')
+
                                         <button type="submit" class="btn-ic delete" title="Excluir compra">
+
                                             <i class="bi bi-trash"></i>
                                         </button>
+
                                     </form>
+
                                 </div>
                             </td>
                         </tr>

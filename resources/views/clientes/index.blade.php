@@ -203,42 +203,136 @@
             gap: 8px;
         }
 
+        /* ── BOTÕES DE AÇÃO ───────────────────────────── */
+
         .btn-ic {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             border: none;
             cursor: pointer;
-            transition: .2s;
+
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+
+            transition:
+                transform .18s ease,
+                box-shadow .18s ease,
+                background .18s ease,
+                color .18s ease;
         }
 
+        /* brilho animado */
+        .btn-ic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg,
+                    transparent,
+                    rgba(255, 255, 255, .45),
+                    transparent);
+            transition: .45s;
+        }
+
+        .btn-ic:hover::before {
+            left: 120%;
+        }
+
+        /* hover geral */
         .btn-ic:hover {
-            transform: translateY(-2px);
+
+            transform: translateY(-3px) scale(1.04);
         }
 
+        /* clique */
+        .btn-ic:active {
+            transform: scale(.96);
+        }
+
+        /* ícones */
+        .btn-ic i {
+            font-size: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* visualizar */
         .btn-ic.view {
             background: #edf5ff;
             color: #3a7bfd;
+            box-shadow: 0 4px 10px rgba(58, 123, 253, .08);
         }
 
-        .btn-ic.edit {
+
+        .btn-ic.view:hover {
+            background: #3a7bfd;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(58, 123, 253, .25);
+        }
+
+        /* editar */
+        >>>>>>>3df00b6 (Voltando um commit para reajustar) .btn-ic.edit {
             background: #fff8e8;
             color: #d69b00;
+            box-shadow: 0 4px 10px rgba(214, 155, 0, .08);
         }
 
+
+        .btn-ic.edit:hover {
+            background: #d69b00;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(214, 155, 0, .25);
+        }
+
+        /* excluir */
         .btn-ic.delete {
             background: #ffeaea;
             color: #d94b4b;
+            box-shadow: 0 4px 10px rgba(217, 75, 75, .08);
         }
 
+
+        .btn-ic.delete:hover {
+            background: #d94b4b;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(217, 75, 75, .25);
+        }
+
+        /* whatsapp */
         .btn-ic.whatsapp {
             background: #e8faf0;
             color: #25D366;
+            box-shadow: 0 4px 10px rgba(37, 211, 102, .10);
         }
+
+        .btn-ic.whatsapp:hover {
+            background: #25D366;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(37, 211, 102, .28);
+        }
+
+        /* reenviar acesso */
+        .btn-ic.user {
+            background: #efe9ff;
+            color: #7a4dff;
+            box-shadow: 0 4px 10px rgba(122, 77, 255, .10);
+        }
+
+        .btn-ic.user:hover {
+            background: #7a4dff;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(122, 77, 255, .25);
+        }
+
+        >>>>>>>3df00b6 (Voltando um commit para reajustar)
 
         /* ── PAGINAÇÃO (clean e leve) ───────────────────── */
         .clientes-pagination-wrapper {
@@ -401,24 +495,48 @@
                             <td>
                                 <div class="acoes-cell">
 
-                                    <button class="btn-ic whatsapp">
+
+                                    {{-- WhatsApp cobrança --}}
+                                    <button type="button" class="btn-ic whatsapp" title="Cobrar via WhatsApp" onclick="cobrarWhatsApp(
+                                                                            '{{ $cliente->celular }}',
+                                                                            '{{ $cliente->nome }}',
+                                                                            '{{ number_format($cliente->compras->sum('saldo_restante'), 2, ',', '.') }}',
+                                                                            '{{ $cliente->compras->pluck('descricao_produtos')->implode(', ') }}'
+                                                                        )">
+
                                         <i class="bi bi-whatsapp"></i>
                                     </button>
 
-                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-ic view">
+                                    {{-- Visualizar --}}
+                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-ic view" title="Visualizar">
+
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-ic edit">
+                                    {{-- Editar --}}
+                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-ic edit" title="Editar">
+
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
-                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST">
+                                    {{-- Reenviar acesso --}}
+                                    <a href="{{ route('clientes.reenviar-acesso', $cliente->id) }}" class="btn-ic user"
+                                        title="Reenviar acesso via WhatsApp">
+
+                                        <i class="bi bi-send"></i>
+                                    </a>
+
+                                    {{-- Excluir --}}
+                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST"
+                                        onsubmit="return confirm('Deseja excluir este cliente?')">
+
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn-ic delete">
+
+                                        <button type="submit" class="btn-ic delete" title="Excluir">
                                             <i class="bi bi-trash"></i>
                                         </button>
+
                                     </form>
 
                                 </div>
