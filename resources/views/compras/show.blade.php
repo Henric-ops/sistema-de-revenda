@@ -589,6 +589,24 @@
     </div>
 </div>
 
+{{-- DESCRIÇÃO DOS PRODUTOS --}}
+<div class="info-section" style="
+    background: white;
+    border-radius: 18px;
+    padding: 22px 24px;
+    border: 1px solid #f5ebe0;
+    box-shadow: 0 4px 14px rgba(156,74,48,.05);
+    margin-bottom: 20px;
+">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid #f5ebe0;">
+        <i class="bi bi-box-seam" style="font-size:18px; color:#9c4a30;"></i>
+        <h3 style="font-size:16px; font-weight:700; color:#2a1a10; margin:0;">Produtos Comprados</h3>
+    </div>
+    <p style="font-size:14px; color:#4a3020; line-height:1.7; margin:0; white-space:pre-line;">
+        {{ $compra->descricao_produtos ?? 'Nenhuma descrição informada.' }}
+    </p>
+</div>
+
 {{-- BARRA DE PROGRESSO --}}
 <div class="progress-card">
     <div class="progress-card-left">

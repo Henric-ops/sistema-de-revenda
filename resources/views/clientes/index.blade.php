@@ -137,7 +137,6 @@
             color: #2a1a10;
         }
 
-        /* Avatar + nome */
         .cliente-cell {
             display: flex;
             align-items: center;
@@ -155,17 +154,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            letter-spacing: -1px;
         }
 
         .cliente-nome {
             font-weight: 700;
             font-size: 14px;
-            color: #2a1a10;
         }
 
-        /* Celular */
         .celular-cell {
             display: flex;
             align-items: center;
@@ -174,12 +169,6 @@
             font-size: 14px;
         }
 
-        .celular-cell i {
-            color: #c0a898;
-            font-size: 13px;
-        }
-
-        /* Badge */
         .badge-pill {
             display: inline-flex;
             align-items: center;
@@ -208,7 +197,6 @@
             color: #d94b4b;
         }
 
-        /* Ações */
         .acoes-cell {
             display: flex;
             align-items: center;
@@ -219,40 +207,17 @@
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
+            border: none;
             cursor: pointer;
-            transition: transform .2s, box-shadow .2s;
+            transition: .2s;
             text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .btn-ic.user {
-            background: #f3f0ff;
-            color: #6f42c1;
-        }
-
-        .btn-ic.user:hover {
-            background: #6f42c1;
-            color: white;
         }
 
         .btn-ic:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .12);
-        }
-
-        .btn-ic.whatsapp {
-            background: #e8faf0;
-            color: #25D366;
-        }
-
-        .btn-ic.whatsapp:hover {
-            background: #25D366;
-            color: white;
         }
 
         .btn-ic.view {
@@ -260,19 +225,9 @@
             color: #3a7bfd;
         }
 
-        .btn-ic.view:hover {
-            background: #3a7bfd;
-            color: white;
-        }
-
         .btn-ic.edit {
             background: #fff8e8;
             color: #d69b00;
-        }
-
-        .btn-ic.edit:hover {
-            background: #d69b00;
-            color: white;
         }
 
         .btn-ic.delete {
@@ -280,17 +235,57 @@
             color: #d94b4b;
         }
 
-        .btn-ic.delete:hover {
-            background: #d94b4b;
-            color: white;
+        .btn-ic.whatsapp {
+            background: #e8faf0;
+            color: #25D366;
         }
 
-        /* Divider visual entre grupos de ação */
-        .acoes-divider {
-            width: 1px;
-            height: 24px;
-            background: #f0e8dc;
-            margin: 0 2px;
+        /* ── PAGINAÇÃO (clean e leve) ───────────────────── */
+        .clientes-pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 18px 24px;
+            border-top: 1px solid #f5ebe0;
+            background: #fff;
+        }
+
+        .clientes-pagination-wrapper .pagination {
+            display: flex !important;
+            gap: 6px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .clientes-pagination-wrapper .page-item .page-link {
+            min-width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            border: 1px solid #efe2d7;
+            background: #faf6f2;
+            color: #7a5040;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none;
+            transition: .2s;
+        }
+
+        .clientes-pagination-wrapper .page-item .page-link:hover {
+            transform: translateY(-2px);
+            background: #fdf4ee;
+        }
+
+        .clientes-pagination-wrapper .page-item.active .page-link {
+            background: linear-gradient(135deg, #9c4a30, #c4693a);
+            color: #fff;
+            border: none;
+        }
+
+        .clientes-pagination-wrapper .page-item.disabled .page-link {
+            opacity: .35;
         }
 
         /* Vazio */
@@ -312,7 +307,6 @@
             margin: 0;
         }
 
-        /* Filtro live search — esconde linhas que não batem */
         .clientes-table tbody tr.hidden-row {
             display: none;
         }
@@ -324,8 +318,8 @@
             }
 
             .clientes-search {
-                max-width: 100%;
                 width: 100%;
+                max-width: 100%;
             }
 
             .clientes-table {
@@ -339,34 +333,33 @@
 
 @section('content')
 
-    {{-- HEADER --}}
     <div class="clientes-header">
         <div class="clientes-header-text">
             <h2>Lista de Clientes</h2>
             <p>Gerencie todos os clientes cadastrados.</p>
         </div>
+
         <a href="{{ route('clientes.create') }}" class="btn-primary-custom">
             <i class="bi bi-plus-circle"></i>
             Novo Cliente
         </a>
     </div>
 
-    {{-- CARD PRINCIPAL --}}
     <div class="clientes-card">
 
-        {{-- TOOLBAR --}}
         <div class="clientes-toolbar">
             <div class="clientes-search">
                 <i class="bi bi-search"></i>
                 <input type="text" id="busca-cliente" placeholder="Buscar por nome ou celular…">
             </div>
+
             <span class="clientes-count">
-                <span id="total-visivel">{{ $clientes->count() }}</span> clientes
+                <span id="total-visivel">{{ $clientes->total() }}</span> clientes
             </span>
         </div>
 
-        {{-- TABELA --}}
-        @if($clientes->count() > 0)
+        @if($clientes->isNotEmpty())
+
             <table class="clientes-table" id="tabela-clientes">
                 <thead>
                     <tr>
@@ -376,11 +369,11 @@
                         <th>Ações</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach($clientes as $cliente)
                         <tr data-busca="{{ strtolower($cliente->nome . ' ' . $cliente->celular) }}">
 
-                            {{-- Nome --}}
                             <td>
                                 <div class="cliente-cell">
                                     <div class="cliente-avatar">
@@ -390,7 +383,6 @@
                                 </div>
                             </td>
 
-                            {{-- Celular --}}
                             <td>
                                 <div class="celular-cell">
                                     <i class="bi bi-telephone"></i>
@@ -398,7 +390,6 @@
                                 </div>
                             </td>
 
-                            {{-- Status --}}
                             <td>
                                 @if($cliente->ativo)
                                     <span class="badge-pill ativo">Ativo</span>
@@ -407,43 +398,25 @@
                                 @endif
                             </td>
 
-                            {{-- Ações --}}
                             <td>
                                 <div class="acoes-cell">
 
-                                    {{-- WhatsApp --}}
-                                    <button type="button" class="btn-ic whatsapp" title="Cobrar via WhatsApp" onclick="cobrarWhatsApp(
-                                                                                        '{{ $cliente->celular }}',
-                                                                                        '{{ $cliente->nome }}',
-                                                                                        '{{ number_format($cliente->compras->sum('saldo_restante'), 2, ',', '.') }}',
-                                                                                        '{{ $cliente->compras->pluck('descricao_produtos')->implode(', ') }}'
-                                                                                    )">
-
+                                    <button class="btn-ic whatsapp">
                                         <i class="bi bi-whatsapp"></i>
                                     </button>
 
-                                    <div class="acoes-divider"></div>
-
-                                    {{-- Ver --}}
-                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-ic view" title="Ver perfil">
+                                    <a href="{{ route('clientes.show', $cliente->id) }}" class="btn-ic view">
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    {{-- Editar --}}
-                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-ic edit" title="Editar">
+                                    <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn-ic edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <a href="{{ route('clientes.reenviar-acesso', $cliente->id) }}" class="btn-ic user"
-                                        title="Reenviar acesso via WhatsApp">
-                                        <i class="bi bi-send"></i>
-                                    </a>
 
-                                    {{-- Excluir --}}
-                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST"
-                                        onsubmit="return confirm('Tem certeza que deseja excluir {{ $cliente->nome }}?')">
+                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn-ic delete" title="Excluir">
+                                        <button class="btn-ic delete">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -455,6 +428,12 @@
                     @endforeach
                 </tbody>
             </table>
+
+            {{-- PAGINAÇÃO NOVA --}}
+            <div class="clientes-pagination-wrapper">
+                {{ $clientes->withQueryString()->links() }}
+            </div>
+
         @else
             <div class="clientes-empty">
                 <i class="bi bi-people"></i>
@@ -468,7 +447,6 @@
 
 @push('scripts')
     <script>
-        // Busca em tempo real
         const input = document.getElementById('busca-cliente');
         const rows = document.querySelectorAll('#tabela-clientes tbody tr');
         const counter = document.getElementById('total-visivel');
@@ -478,10 +456,9 @@
             let visivel = 0;
 
             rows.forEach(row => {
-                const texto = row.dataset.busca || '';
-                const bate = texto.includes(q);
-                row.classList.toggle('hidden-row', !bate);
-                if (bate) visivel++;
+                const ok = row.dataset.busca.includes(q);
+                row.classList.toggle('hidden-row', !ok);
+                if (ok) visivel++;
             });
 
             counter.textContent = visivel;

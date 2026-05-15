@@ -86,6 +86,7 @@
             background: linear-gradient(135deg, #9c4a30, #c4693a);
             color: #fff;
             font-weight: 700;
+            cursor: pointer;
         }
 
         .btn-limpar {
@@ -128,11 +129,21 @@
             font-size: 11px;
             text-transform: uppercase;
             color: #b09080;
+            letter-spacing: .5px;
         }
 
         .compras-table td {
-            padding: 18px 20px;
+            padding: 16px 20px;
             border-top: 1px solid #faf2eb;
+            vertical-align: middle;
+        }
+
+        .compras-table tbody tr {
+            transition: background .15s;
+        }
+
+        .compras-table tbody tr:hover {
+            background: #fdf8f5;
         }
 
         .cliente-cell {
@@ -151,6 +162,7 @@
             justify-content: center;
             font-weight: 800;
             color: #9c4a30;
+            flex-shrink: 0;
         }
 
         .cliente-nome {
@@ -160,6 +172,7 @@
 
         .valor-cell {
             font-weight: 800;
+            color: #2a1a10;
         }
 
         .parcelas-cell {
@@ -171,6 +184,7 @@
             border-radius: 999px;
             font-size: 12px;
             font-weight: 700;
+            color: #9c4a30;
         }
 
         .badge-pill {
@@ -206,44 +220,92 @@
             color: #b07800;
         }
 
+        /* ── BOTÕES DE AÇÃO ──────────────────────────────── */
         .acoes-cell {
             display: flex;
-            gap: 8px;
+            align-items: center;
+            gap: 4px;
+            background: #faf6f2;
+            border: 1px solid #f0e6dc;
+            border-radius: 14px;
+            padding: 5px;
+            width: fit-content;
         }
 
         .btn-ic {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background .18s, color .18s, transform .18s;
+        }
+
+        .btn-ic:hover {
+            transform: scale(1.08);
         }
 
         .btn-ic.view {
-            background: #edf5ff;
             color: #3a7bfd;
         }
 
         .btn-ic.edit {
-            background: #fff7e8;
-            color: #d69b00;
+            color: #c08800;
         }
 
         .btn-ic.delete {
-            background: #ffeaea;
             color: #d94b4b;
         }
 
+        .btn-ic.view:hover {
+            background: #e8f0ff;
+            color: #1a5bdd;
+        }
+
+        .btn-ic.edit:hover {
+            background: #fff3cc;
+            color: #a07000;
+        }
+
+        .btn-ic.delete:hover {
+            background: #ffeaea;
+            color: #b83030;
+        }
+
+        .btn-ic-sep {
+            width: 1px;
+            height: 20px;
+            background: #ede0d4;
+            flex-shrink: 0;
+            border-radius: 1px;
+        }
+
+        /* ── VAZIO ───────────────────────────────────────── */
         .compras-empty {
             padding: 70px 20px;
             text-align: center;
             color: #c0a898;
         }
 
-        /* PAGINAÇÃO (Bootstrap fixada) */
+        .compras-empty i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+            opacity: .4;
+        }
+
+        .compras-empty p {
+            font-size: 15px;
+            margin: 0;
+        }
+
+        /* ── PAGINAÇÃO ───────────────────────────────────── */
         .pagination {
             display: flex !important;
             gap: 6px;
@@ -356,6 +418,7 @@
 
                             <td>
                                 <span class="parcelas-cell">
+                                    <i class="bi bi-grid-3x3-gap" style="font-size:11px;"></i>
                                     {{ $compra->qtd_parcelas }}x
                                 </span>
                             </td>
@@ -366,24 +429,29 @@
                                 </span>
                             </td>
 
-                            <td>
+                            <td style="color:#6a5040; font-weight:600; font-size:14px;">
                                 {{ $compra->data_compra->format('d/m/Y') }}
                             </td>
 
                             <td>
                                 <div class="acoes-cell">
-                                    <a href="{{ route('compras.show', $compra->id) }}" class="btn-ic view">
+                                    <a href="{{ route('compras.show', $compra->id) }}" class="btn-ic view" title="Ver detalhes">
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    <a href="{{ route('compras.edit', $compra->id) }}" class="btn-ic edit">
+                                    <div class="btn-ic-sep"></div>
+
+                                    <a href="{{ route('compras.edit', $compra->id) }}" class="btn-ic edit" title="Editar compra">
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
-                                    <form action="{{ route('compras.destroy', $compra->id) }}" method="POST">
+                                    <div class="btn-ic-sep"></div>
+
+                                    <form action="{{ route('compras.destroy', $compra->id) }}" method="POST"
+                                        onsubmit="return confirm('Excluir esta compra?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn-ic delete">
+                                        <button type="submit" class="btn-ic delete" title="Excluir compra">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -394,7 +462,7 @@
                 </tbody>
             </table>
 
-            <div style="padding:24px">
+            <div style="padding: 24px;">
                 {{ $compras->withQueryString()->links() }}
             </div>
 

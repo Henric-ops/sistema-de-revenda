@@ -16,7 +16,7 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::with('compras.pagamentos', 'user')
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('clientes.index', compact('clientes'));
     }
