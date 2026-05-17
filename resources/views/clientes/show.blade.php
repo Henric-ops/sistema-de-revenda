@@ -207,6 +207,9 @@
         .info-section-header i {
             font-size: 18px;
             color: #6366a1;
+            align-self: center;
+            margin-top: -4px;
+
         }
 
         .info-section-header h3 {
@@ -566,53 +569,53 @@
         </div>
 
         @if($cliente->compras->count() > 0)
-                <div class="compras-list">
-                    @foreach($cliente->compras->sortByDesc('data_compra') as $compra)
-                            <div class="compra-item">
-                                <div class="compra-item-left">
-                                    <div class="compra-item-icon">
-                                        <i class="bi bi-bag"></i>
-                                    </div>
-                                    <div class="compra-item-info">
-                                        <div class="compra-item-data">
-                                            Compra #{{ $compra->id }}
-                                        </div>
-                                        <div class="compra-item-meta">
-                                            <i class="bi bi-calendar-event"></i>
-                                            {{ \Carbon\Carbon::parse($compra->data_compra)->format('d/m/Y') }}
-                                        </div>
-
-                                        {{-- ADICIONE ISTO --}}
-                                        @if($compra->descricao_produtos)
-                                            <div
-                                                style="font-size:12px; color:#6a5040; margin-top:4px; display:flex; align-items:flex-start; gap:5px;">
-                                                <i class="bi bi-box-seam" style="font-size:11px; margin-top:2px; flex-shrink:0;"></i>
-                                                <span style="line-height:1.4;">{{ Str::limit($compra->descricao_produtos, 80) }}</span>
-                                            </div>
-                                        @endif
-                                    </div>
+            <div class="compras-list">
+                @foreach($cliente->compras->sortByDesc('data_compra') as $compra)
+                    <div class="compra-item">
+                        <div class="compra-item-left">
+                            <div class="compra-item-icon">
+                                <i class="bi bi-bag"></i>
+                            </div>
+                            <div class="compra-item-info">
+                                <div class="compra-item-data">
+                                    Compra #{{ $compra->id }}
                                 </div>
+                                <div class="compra-item-meta">
+                                    <i class="bi bi-calendar-event"></i>
+                                    {{ \Carbon\Carbon::parse($compra->data_compra)->format('d/m/Y') }}
+                                </div>
+                                @if($compra->descricao_produtos)
+                                    <div
+                                        style="font-size:12px; color:#6a5040; margin-top:4px; display:flex; align-items:flex-start; gap:5px;">
+                                        <i class="bi bi-box-seam" style="font-size:11px; margin-top:2px; flex-shrink:0;"></i>
+                                        <span style="line-height:1.4;">{{ Str::limit($compra->descricao_produtos, 80) }}</span>
+                                    </div>
+                                @endif
                             </div>
-                            <div class="compra-item-valor">
-                                R$ {{ number_format($compra->valor_total, 2, ',', '.') }}
-                            </div>
-                            <div class="compra-item-status">
-                                <span class="badge-status {{ strtolower($compra->status) }}">
-                                    {{ $compra->status }}
-                                </span>
-                            </div>
-                            <a href="{{ route('compras.show', $compra->id) }}" class="btn-action">
-                                <i class="bi bi-eye"></i>
-                            </a>
                         </div>
-                    @endforeach
+
+                        <div class="compra-item-valor">
+                            R$ {{ number_format($compra->valor_total, 2, ',', '.') }}
+                        </div>
+
+                        <div class="compra-item-status">
+                            <span class="badge-status {{ strtolower($compra->status) }}">
+                                {{ $compra->status }}
+                            </span>
+                        </div>
+
+                        <a href="{{ route('compras.show', $compra->id) }}" class="btn-action" title="Ver detalhes">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </div>
+                @endforeach
             </div>
         @else
-        <div class="empty-state">
-            <i class="bi bi-inbox"></i>
-            <p>Nenhuma compra registrada</p>
-        </div>
-    @endif
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <p>Nenhuma compra registrada</p>
+            </div>
+        @endif
     </div>
 
 @endsection
